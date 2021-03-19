@@ -153,7 +153,10 @@ func (s *Server) initRouter() {
 
 	s.router.GET("/download", s.handleDownloads)
 	s.router.GET("/download/:filename", s.handleDownload)
-
+//b
+	s.router.GET("/set_position/:filename", s.handleSetPosition)
+	s.router.GET("/get_position/:filename", s.handleGetPosition)
+//e
 	s.router.GET("/static/*filepath", func(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 		http.FileServer(public.Box).ServeHTTP(w, req)
 	})
@@ -218,6 +221,75 @@ padding: 0;
 	`)
 	io.WriteString(w, buf.String())
 }
+//b
+func (s *Server) handleSetPosition(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	bid := p.ByName("filename")
+	bid = strings.Replace(strings.Replace(bid, filepath.Ext(bid), "", 1), ".kepub", "", -1)
+
+	for _, b := range s.Indexer.BookList() {
+		if b.ID() == bid {
+//fmt.Println(r.URL.Query().Get("position"));
+			w.Header().Set("Cache-Control", "no-cache")
+			w.Header().Set("Content-Type", "application/json")
+
+			data, err := ioutil.ReadFile(b.FilePath + ".position");
+
+			if (err == nil) {
+				dataStr := strings.TrimSpace(string(data));
+				if (dataStr == r.URL.Query().Get("position")) {
+//fmt.Println("Doublicate Save");
+					fmt.Fprintf(w, `{"status": "ok"}`)
+				}
+			}
+			
+			f, err := os.Create(b.FilePath + ".position");
+
+			if err != nil {
+				s.render.HTML(w, http.StatusOK, "status", map[string]interface{}{
+					"status":       "fail",
+				});
+
+				fmt.Fprintf(w, `{"status": "fail"}`)
+				return;
+			}			
+			f.WriteString(r.URL.Query().Get("position"));
+			defer f.Close();
+			fmt.Fprintf(w, `{"status": "ok"}`)
+			return;
+		}
+	}
+
+	w.WriteHeader(http.StatusNotFound)
+	io.WriteString(w, "Could not find book with id "+bid)
+}
+
+func (s *Server) handleGetPosition(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	bid := p.ByName("filename")
+	bid = strings.Replace(strings.Replace(bid, filepath.Ext(bid), "", 1), ".kepub", "", -1)
+
+	for _, b := range s.Indexer.BookList() {
+		if b.ID() == bid {
+			data, err := ioutil.ReadFile(b.FilePath + ".position");
+
+			w.Header().Set("Cache-Control", "no-cache")
+			w.Header().Set("Content-Type", "application/json")
+
+			if (err != nil) {
+				fmt.Fprintf(w, `{"position": nil }`)
+				return;
+			}
+			dataStr := strings.TrimSpace(string(data));
+//fmt.Println("res: " + string(data));
+
+			fmt.Fprintf(w, `{"position": "%s"}`, dataStr)
+			return
+		}
+	}
+
+	w.WriteHeader(http.StatusNotFound)
+	io.WriteString(w, "Could not find book with id "+bid)
+}
+//e
 
 func (s *Server) handleDownload(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	bid := p.ByName("filename")

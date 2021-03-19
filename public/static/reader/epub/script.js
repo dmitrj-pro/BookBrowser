@@ -474,10 +474,27 @@ App.prototype.onRenditionRelocatedUpdateIndicators = function (event) {
 
 App.prototype.onRenditionRelocatedSavePos = function (event) {
     localStorage.setItem(`${this.state.book.key()}:pos`, event.start.cfi);
+//b
+    let sendUrl = document.location.protocol + "//" + document.location.host + "/set_position/" + document.location.hash.substring(2 + 10) + "?position=" + event.start.cfi;
+    let request = new Request(sendUrl);
+    fetch(request);
+//e
 };
 
 App.prototype.onRenditionStartedRestorePos = function (event) {
     try {
+//b
+        let sendUrl = document.location.protocol + "//" + document.location.host + "/get_position/" + document.location.hash.substring(2 + 10);
+        let request = new Request(sendUrl);
+        fetch(request).then(response => response.json()).then(js => {
+                let pos = js.position;
+                if (pos == null) 
+                        return;
+                console.log("Force set position ", pos);
+                this.state.rendition.display(pos);
+	});
+//e
+
         let stored = localStorage.getItem(`${this.state.book.key()}:pos`);
         console.log("storedPos", stored);
         if (stored) this.state.rendition.display(stored);

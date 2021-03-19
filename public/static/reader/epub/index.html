@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ePubViewer</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="./Material.css" rel="stylesheet">
     <link rel="stylesheet" href="libs/normalize.min.css">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css?family=Arbutus+Slab" rel="stylesheet">
@@ -240,27 +240,9 @@
     <script src="libs/jszip.min.js"></script>
     <script src="libs/epub.js"></script>
 
-    <script src="https://cdn.ravenjs.com/3.26.2/raven.min.js" crossorigin="anonymous"></script>
-    <script>
-        Raven.config('https://2ca31038f72145f787447a29b085007b@sentry.io/1239248', {
-            autoBreadcrumbs: {
-                console: true,
-                dom: true
-            }
-        }).install();
-    </script>
 
     <script src="script.js"></script>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-66226417-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        gtag('config', 'UA-66226417-1');
-    </script>
 </body>
 
 </html>

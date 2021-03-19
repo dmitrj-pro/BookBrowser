@@ -1786,6 +1786,14 @@ function webViewerUpdateViewarea(evt) {
       'scrollTop': location.top,
       'rotation': location.rotation
     }).catch(function () {});
+    //b
+    var pararmsString = document.location.search;
+    var searchParams = new URLSearchParams(pararmsString);
+
+    let sendUrl = document.location.protocol + "//" + document.location.host + "/set_position/" + searchParams.get("file").substring(10) + "?position=" + location.pageNumber;
+    let request = new Request(sendUrl);
+    fetch(request);
+    //e
   }
   var href = PDFViewerApplication.pdfLinkService.getAnchorUrl(location.pdfOpenParams);
   PDFViewerApplication.appConfig.toolbar.viewBookmark.href = href;
@@ -6964,6 +6972,20 @@ var PDFLinkService = function () {
         }
         if ('page' in params) {
           pageNumber = params.page | 0 || 1;
+//b
+        var pararmsString = document.location.search;
+        var searchParams = new URLSearchParams(pararmsString);
+
+        let sendUrl = document.location.protocol + "//" + document.location.host + "/get_position/" + searchParams.get("file").substring(10);
+        let request = new Request(sendUrl);
+        fetch(request).then(response => response.json()).then(js => {
+                let pos = js.position;
+                if (pos == null) 
+                        return;
+                console.log("Force set position ", pos);
+                pageNumber=pos;
+	});
+//e
         }
         if ('zoom' in params) {
           var zoomArgs = params.zoom.split(',');
