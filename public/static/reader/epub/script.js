@@ -481,21 +481,22 @@ App.prototype.onRenditionRelocatedSavePos = function (event) {
 //e
 };
 
-App.prototype.onRenditionStartedRestorePos = function (event) {
+App.prototype.onRenditionStartedRestorePos = async function (event) {
     try {
 //b
         let sendUrl = document.location.protocol + "//" + document.location.host + "/get_position/" + document.location.hash.substring(2 + 10);
-        let request = new Request(sendUrl);
-        fetch(request).then(response => response.json()).then(js => {
-                let pos = js.position;
-                if (pos == null) 
-                        return;
-                console.log("Force set position ", pos);
-                this.state.rendition.display(pos);
-	});
+        var request = new XMLHttpRequest();
+        request.open('GET', sendUrl, false);
+        request.send();
+        let pos = JSON.parse(request.responseText);
+        pos = pos.position;
 //e
 
         let stored = localStorage.getItem(`${this.state.book.key()}:pos`);
+//b
+        if (pos != 0)
+            stored = pos;
+//e
         console.log("storedPos", stored);
         if (stored) this.state.rendition.display(stored);
     } catch (err) {

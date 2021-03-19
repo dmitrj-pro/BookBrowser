@@ -6973,18 +6973,21 @@ var PDFLinkService = function () {
         if ('page' in params) {
           pageNumber = params.page | 0 || 1;
 //b
-        var pararmsString = document.location.search;
-        var searchParams = new URLSearchParams(pararmsString);
+            var pararmsString = document.location.search;
+            var searchParams = new URLSearchParams(pararmsString);
 
-        let sendUrl = document.location.protocol + "//" + document.location.host + "/get_position/" + searchParams.get("file").substring(10);
-        let request = new Request(sendUrl);
-        fetch(request).then(response => response.json()).then(js => {
-                let pos = js.position;
-                if (pos == null) 
-                        return;
+            let sendUrl = document.location.protocol + "//" + document.location.host + "/get_position/" + searchParams.get("file").substring(10);
+
+            var request = new XMLHttpRequest();
+            request.open('GET', sendUrl, false);
+            request.send();
+            let pos = JSON.parse(request.responseText);
+            pos = pos.position;
+
+            if (pos != null) {
                 console.log("Force set position ", pos);
                 pageNumber=pos;
-	});
+            }
 //e
         }
         if ('zoom' in params) {
