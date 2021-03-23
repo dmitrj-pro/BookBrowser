@@ -16014,6 +16014,9 @@ var Archive = function () {
 	}, {
 		key: "getBlob",
 		value: function getBlob(url, mimeType) {
+			//b
+			try{
+			//e
 			var decodededUrl = window.decodeURIComponent(url.substr(1)); // Remove first slash
 			var entry = this.zip.file(decodededUrl);
 
@@ -16023,6 +16026,9 @@ var Archive = function () {
 					return new Blob([uint8array], { type: mimeType });
 				});
 			}
+			//b
+			} catch (e) {}
+			//e
 		}
 
 		/**
@@ -16035,6 +16041,9 @@ var Archive = function () {
 	}, {
 		key: "getText",
 		value: function getText(url, encoding) {
+			//b
+			try{
+			//e
 			var decodededUrl = window.decodeURIComponent(url.substr(1)); // Remove first slash
 			var entry = this.zip.file(decodededUrl);
 
@@ -16043,6 +16052,9 @@ var Archive = function () {
 					return text;
 				});
 			}
+			//b
+			} catch (e) {}
+			//e
 		}
 
 		/**

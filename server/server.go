@@ -275,7 +275,7 @@ func (s *Server) handleGetPosition(w http.ResponseWriter, r *http.Request, p htt
 			w.Header().Set("Content-Type", "application/json")
 
 			if (err != nil) {
-				fmt.Fprintf(w, `{"position": nil }`)
+				fmt.Fprintf(w, `{"position": null }`)
 				return;
 			}
 			dataStr := strings.TrimSpace(string(data));

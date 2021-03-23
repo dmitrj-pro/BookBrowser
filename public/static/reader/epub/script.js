@@ -494,7 +494,7 @@ App.prototype.onRenditionStartedRestorePos = async function (event) {
 
         let stored = localStorage.getItem(`${this.state.book.key()}:pos`);
 //b
-        if (pos != 0)
+        if (pos != null && pos != 0)
             stored = pos;
 //e
         console.log("storedPos", stored);
