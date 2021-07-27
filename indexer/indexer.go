@@ -123,6 +123,9 @@ func (i *Indexer) getBook(filename string) (*booklist.Book, error) {
 	}
 
 	b := bi.Book()
+	//b
+	b.UpdateAccessTime()
+	//e
 	b.HasCover = false
 	if i.coverpath != nil && bi.HasCover() {
 		coverpath := filepath.Join(*i.coverpath, fmt.Sprintf("%s.jpg", b.ID()))

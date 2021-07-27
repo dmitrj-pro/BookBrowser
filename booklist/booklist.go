@@ -1,5 +1,6 @@
 package booklist
 
+
 import (
 	"sort"
 	"strings"
@@ -65,6 +66,15 @@ func (l BookList) SortBy(sort string) (nl BookList, sorted bool) {
 			return false
 		})
 		break
+	//b
+	case "access-time":
+		nb = nb.Sorted(func(a, b *Book) bool {
+			a.UpdateAccessTime()
+			b.UpdateAccessTime()
+			return a.AccessTime.Unix() > b.AccessTime.Unix()
+		})
+		break
+	//e
 	case "author-desc":
 		nb = nb.Sorted(func(a, b *Book) bool {
 			if a.Author != "" && b.Author != "" {

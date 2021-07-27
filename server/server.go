@@ -478,7 +478,9 @@ func (s *Server) handleSeries(w http.ResponseWriter, r *http.Request, p httprout
 }
 
 func (s *Server) handleBooks(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	bl, _ := s.Indexer.BookList().SortBy("modified-desc")
+	//b
+	bl, _ := s.Indexer.BookList().SortBy("access-time")
+	//e
 	bl, _ = bl.SortBy(r.URL.Query().Get("sort"))
 
 	s.render.HTML(w, http.StatusOK, "books", map[string]interface{}{
