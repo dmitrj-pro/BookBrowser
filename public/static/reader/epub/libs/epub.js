@@ -16098,6 +16098,7 @@ var Archive = function () {
 				deferred.resolve(this.urlCache[url]);
 				return deferred.promise;
 			}
+console.log(url);
 
 			if (useBase64) {
 				response = this.getBase64(url);
@@ -16124,10 +16125,13 @@ var Archive = function () {
 			}
 
 			if (!response) {
-				deferred.reject({
+				//b
+				//deferred.reject({
+				console.log({
 					message: "File not found in the epub: " + url,
 					stack: new Error().stack
 				});
+				//e
 			}
 
 			return deferred.promise;
