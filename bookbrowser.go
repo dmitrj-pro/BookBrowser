@@ -17,6 +17,7 @@ import (
 	_ "github.com/geek1011/BookBrowser/formats/epub"
 	_ "github.com/geek1011/BookBrowser/formats/mobi"
 	_ "github.com/geek1011/BookBrowser/formats/pdf"
+	_ "github.com/geek1011/BookBrowser/formats/galery"
 	"github.com/geek1011/BookBrowser/server"
 	"github.com/geek1011/BookBrowser/util"
 	"github.com/geek1011/BookBrowser/util/sigusr"

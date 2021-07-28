@@ -12,6 +12,8 @@
             <a class="button read" href="/static/reader/epub/#!/download/{{.ID}}.{{.FileType}}">Read</a>
             {{end}} {{if eq .FileType "pdf"}}
             <a class="button read" href="/static/reader/pdf/web/viewer.html?file=/download/{{.ID}}.{{.FileType}}`">Read</a>
+            {{end}} {{if eq .FileType "galery"}}
+            <a class="button read" href="/galery/reader/{{.ID}}">Read</a>
             {{end}}
         </div>
     </div>

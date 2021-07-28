@@ -156,6 +156,8 @@ func (s *Server) initRouter() {
 //b
 	s.router.GET("/set_position/:filename", s.handleSetPosition)
 	s.router.GET("/get_position/:filename", s.handleGetPosition)
+	s.router.GET("/galery/reader/:filename", s.handleGallery)
+	s.router.GET("/galery/download/:bid/:filename", s.handleGalleryDownload)
 //e
 	s.router.GET("/static/*filepath", func(w http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 		http.FileServer(public.Box).ServeHTTP(w, req)
@@ -256,6 +258,83 @@ func (s *Server) handleSetPosition(w http.ResponseWriter, r *http.Request, p htt
 			defer f.Close();
 			fmt.Fprintf(w, `{"status": "ok"}`)
 			return;
+		}
+	}
+
+	w.WriteHeader(http.StatusNotFound)
+	io.WriteString(w, "Could not find book with id "+bid)
+}
+
+type ImagesType struct {
+  Pos int
+  All int
+  Bid string
+  Name string
+}
+
+func (s *Server) handleGalleryDownload(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	bid := p.ByName("bid")
+	image := p.ByName("filename")
+
+	for _, b := range s.Indexer.BookList() {
+		if b.ID() == bid {
+			folder := strings.ReplaceAll(b.FilePath, ".galery", "")
+			filename := folder + "/" + image
+
+			rd, err := os.Open(filename)
+			if err != nil {
+				w.WriteHeader(http.StatusInternalServerError)
+				io.WriteString(w, "Error handling request")
+				log.Printf("Error handling request for %s: %s\n", r.URL.Path, err)
+				return
+			}
+			w.Header().Set("Content-Disposition", "attachment; filename="+image)
+			w.Header().Set("Content-Type", "image/jpeg")
+			_, err = io.Copy(w, rd)
+			rd.Close()
+			if err != nil {
+				log.Printf("Error handling request for %s: %s\n", r.URL.Path, err)
+			}
+			return
+		}
+	}
+
+	w.WriteHeader(http.StatusNotFound)
+	io.WriteString(w, "Could not find book with id "+bid)
+}
+
+func (s *Server) handleGallery(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	bid := p.ByName("filename")
+
+	for _, b := range s.Indexer.BookList() {
+		if b.ID() == bid {
+			folder := strings.ReplaceAll(b.FilePath, ".galery", "")
+
+			lst, err := ioutil.ReadDir(folder)
+			if (err != nil) {
+				w.WriteHeader(http.StatusNotFound)
+				io.WriteString(w, "Could not find galery context "+bid)
+				return
+			}
+			i := 0
+			filenames := []ImagesType{}
+			for _, file := range lst{
+				i = i + 1
+				file := ImagesType{i, len(lst), bid, file.Name()}
+				filenames = append(filenames, file)
+			}
+
+
+			s.render.HTML(w, http.StatusOK, "galery", map[string]interface{}{
+				"CurVersion":       s.version,
+				"PageTitle":        "Authors",
+				"ShowBar":          true,
+				"ShowSearch":       false,
+				"ShowViewSelector": true,
+				"Title":            "Authors",
+				"Images":		filenames,
+			});
+			return
 		}
 	}
 

@@ -9,6 +9,7 @@ An easy-to-use tool to generate a web-based ePub and PDF ebook browser. All you 
 - Multiple book formats
     - epub
     - pdf
+    - galery (Comics pics)
     - mobi (basic support)
 - Search
 - Advanced Search
@@ -30,6 +31,7 @@ An easy-to-use tool to generate a web-based ePub and PDF ebook browser. All you 
     - Book search
     - And more
 - Search
+- Save read position
 - And more
 - Easy-to-use
 - Fast
@@ -60,6 +62,30 @@ The web interface works on IE 9+, Edge, Firefox 3+, Chrome, Safari 5.1+, Opera 1
 
 The web-based reader works on IE 10+, Edge, Firefox 28+, Chrome 21+, Safari 9+, Opera 17+, and Android browser 4.4+.
 
+## Create galery
+
+Create folder in books directory and copy image files to it. Example folder ~/Books/Comics/Konosuba 1.
+
+Create file next to the created folder the same name as the created directory with type ".galery". Example ~/Books/Comics/Konosuba 1.galery.
+
+Optional: Write information about galery in xml format:
+
+```
+<galery>
+	<name>KonoSuba Part 1</name>
+	<cover>Image 1.jpg</cover>
+	<author>Natsume Akatsuki</author>
+</galery>
+```
+
+If option cover is empty, then selected first image from galery for book cover.
+
+## About save position
+
+Current version of BookBrowser save read position. Position is global for all user. 
+
+In time of read of book BookBrowser save file with current read position on hard drive near readed file with type ".position".
+
 ## Usage
 
 ```
@@ -73,3 +99,7 @@ Options:
   -t, --tempdir string   the directory to store temp files such as cover thumbnails (created on start, deleted on exit unless already exists) (default "/tmp/bookbrowser946254949")
       --version          Show the version
 ```
+
+## Add galery
+
+
